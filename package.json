@@ -1,0 +1,25 @@
+{
+  "name": "leave-request-portal",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite dev --host 0.0.0.0 --port 17606",
+    "build": "vite build",
+    "preview": "vite preview  --host 0.0.0.0 --port 17606"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "3.2.0",
+    "@sveltejs/kit": "2.5.5",
+    "svelte": "^4.2.19",
+    "vite": "^5.4.2"
+  },
+  "type": "module",
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "dotenv": "^17.2.1",
+    "redis": "^5.7.0",
+    "request": "^2.88.2",
+    "sweetalert2": "^11.25.1",
+    "xlsx": "^0.18.5"
+  }
+}
