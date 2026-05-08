@@ -1,0 +1,130 @@
+{
+  "institution": {
+    "name": "Hong Bang International University",
+    "short_name": "HBIU",
+    "website": "https://hiu.vn/en/home/",
+    "tagline": "Your Future Starts Here",
+    "founded": "1997",
+    "address": "215 Dien Bien Phu Street, Ward 15, Binh Thanh District, Ho Chi Minh City, Vietnam",
+    "phone": "(+84) 28 7308 3456",
+    "email": "admissions@hiu.vn",
+    "office_hours": "Monday to Saturday, 8:00 AM to 5:00 PM"
+  },
+  "key_dates": {
+    "application_open": "1 April 2026",
+    "application_close": "30 June 2026",
+    "exam_date": "15 July 2026",
+    "results_date": "1 August 2026"
+  },
+  "stats": [
+    { "icon": "academic-cap", "number": "42", "label": "Total Programs" },
+    { "icon": "trophy", "number": "29+", "label": "Years of Excellence" },
+    { "icon": "building-library", "number": "3", "label": "Campus Locations" },
+    { "icon": "users", "number": "18,000+", "label": "Students Enrolled" }
+  ],
+  "key_date_cards": [
+    { "icon": "book-open", "label": "Application Opens", "value_key": "application_open" },
+    { "icon": "clock", "label": "Application Closes", "value_key": "application_close" },
+    { "icon": "pencil-square", "label": "Entrance Exam", "value_key": "exam_date" },
+    { "icon": "trophy", "label": "Results Date", "value_key": "results_date" }
+  ],
+  "programs": [
+    {
+      "name": "B.Tech",
+      "level": "Undergraduate",
+      "specializations": "Computer Science, Electronics, Mechanical, Civil, AI & Data Science"
+    },
+    {
+      "name": "B.Sc",
+      "level": "Undergraduate",
+      "specializations": "Physics, Chemistry, Mathematics, Biotechnology"
+    },
+    {
+      "name": "BCA",
+      "level": "Undergraduate",
+      "specializations": "General, Cloud Computing, Cyber Security"
+    },
+    {
+      "name": "MBA",
+      "level": "Postgraduate",
+      "specializations": "Finance, Marketing, Human Resources, Operations"
+    },
+    {
+      "name": "M.Tech",
+      "level": "Postgraduate",
+      "specializations": "VLSI, Software Engineering, Structural Engineering"
+    },
+    {
+      "name": "PhD",
+      "level": "Doctoral",
+      "specializations": "Engineering, Sciences, Management"
+    }
+  ],
+  "accreditations": ["UGC Recognized", "NAAC A+ Grade", "NBA Accredited Programs", "AICTE Approved"],
+  "why_choose_us": [
+    {
+      "title": "World-class faculty",
+      "subtitle": "Experienced educators with industry exposure"
+    },
+    {
+      "title": "Modern infrastructure",
+      "subtitle": "Smart classrooms and well-equipped labs"
+    },
+    {
+      "title": "Strong placements",
+      "subtitle": "Top recruiters from across industries"
+    },
+    {
+      "title": "Vibrant campus life",
+      "subtitle": "Diverse student community and clubs"
+    },
+    {
+      "title": "Industry partnerships",
+      "subtitle": "Live projects with leading companies"
+    },
+    {
+      "title": "Global outlook",
+      "subtitle": "International tie-ups and exchange programs"
+    }
+  ],
+  "eligibility": [
+    {
+      "level": "Undergraduate",
+      "text": "Pass in 10+2 (or equivalent) from a recognized board with minimum 50% aggregate marks. Subject-specific eligibility may apply."
+    },
+    {
+      "level": "Postgraduate",
+      "text": "Bachelor's degree in a relevant discipline from a recognized university with minimum 55% aggregate marks."
+    },
+    {
+      "level": "Doctoral",
+      "text": "Master's degree in a relevant discipline with minimum 60% marks. Entrance test and interview required."
+    }
+  ],
+  "apply_steps": [
+    {
+      "title": "Fill course and contact details",
+      "text": "Choose your program level, specialization, nationality and confirm your registered contact information."
+    },
+    {
+      "title": "Fill personal details",
+      "text": "Provide your name, date of birth, gender, category, address and identification details."
+    },
+    {
+      "title": "Add educational qualifications",
+      "text": "Add your past qualifications — board, year and percentage / CGPA. You can add multiple records."
+    },
+    {
+      "title": "Fill guardian details",
+      "text": "Enter parent / guardian information including contact, occupation and emergency details."
+    },
+    {
+      "title": "Upload documents",
+      "text": "Upload your photograph, mark sheets, ID proof and supporting certificates in PDF / image format."
+    },
+    {
+      "title": "Pay application fee and submit",
+      "text": "Review your details, complete the application fee payment and submit. You'll get an exam slot once payment is confirmed."
+    }
+  ]
+}
