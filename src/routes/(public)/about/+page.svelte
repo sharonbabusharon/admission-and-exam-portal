@@ -1,95 +1,12 @@
 <script>
-  import Icon from '$lib/components/Icon.svelte';
-  import content from '$lib/data/content.json';
+ import {currentUser,openSignupModal} from '$lib/stores/auth.js';
+ import {goto} from '$app/navigation';
+ import Icon from '$lib/components/Icon.svelte';
+ function apply(){if($currentUser)goto('/app/dashboard');else openSignupModal('/app/dashboard');}
 </script>
-
-<svelte:head>
-  <title>About — Hong Bang International University</title>
-</svelte:head>
-
-<header class="page-header">
-  <div class="container">
-    <h1>About {content.institution.name}</h1>
-    <p>Empowering students with quality education since {content.institution.founded}</p>
-  </div>
-</header>
-
-<section class="section">
-  <div class="container">
-    <div class="about-grid">
-      <div>
-        <h2>Our Vision</h2>
-        <p>
-          To be a globally recognized centre of academic excellence and innovation, fostering
-          knowledge, creativity and leadership in students from diverse backgrounds. Hong Bang
-          International University strives to be among the leading universities in Vietnam and
-          across the region.
-        </p>
-        <h2 style="margin-top: 24px;">Our Mission</h2>
-        <p>
-          We are committed to delivering world-class education through experienced faculty, modern
-          infrastructure and a vibrant learning ecosystem. Our students graduate with the skills,
-          values and confidence to lead meaningful careers and contribute to society.
-        </p>
-        <p>
-          <strong>Founded:</strong>
-          {content.institution.founded} &nbsp;•&nbsp;
-          <strong>Programs:</strong>
-          {content.stats[0].number}+ &nbsp;•&nbsp;
-          <strong>Students:</strong>
-          {content.stats[3].number}
-        </p>
-      </div>
-      <div class="about-image">
-        <Icon name="building-office" size={80} strokeWidth={1.25} />
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section key-dates">
-  <div class="container">
-    <h2 class="section-title">Accreditations &amp; Recognitions</h2>
-    <p class="section-subtitle">Quality verified by national bodies</p>
-    <div class="accreditation-grid">
-      {#each content.accreditations as item}
-        <div class="accreditation-card">{item}</div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Why Choose Us</h2>
-    <p class="section-subtitle">Six reasons that set us apart</p>
-    <div class="feature-list">
-      {#each content.why_choose_us as feature}
-        <div class="feature-item">
-          <div class="feature-check">
-            <Icon name="check" size={16} strokeWidth={2.5} />
-          </div>
-          <div class="feature-text">
-            <strong>{feature.title}</strong>
-            <span>{feature.subtitle}</span>
-          </div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<section class="section key-dates">
-  <div class="container">
-    <h2 class="section-title">Director's Message</h2>
-    <div style="max-width: 820px; margin: 0 auto;">
-      <div class="message-box">
-        "Education is more than a degree — it is a transformation. At our institution, every
-        student is empowered to discover their passion, sharpen their skills and grow into
-        responsible global citizens. We invite you to join a community that values curiosity,
-        collaboration and excellence."
-        <span class="author">— Dr. A. Sundaram, Director</span>
-      </div>
-    </div>
-  </div>
-</section>
+<svelte:head><title>A place for your ambition — Hong Bang International University</title></svelte:head>
+<main class="editorial-page">
+ <header class="editorial-header"><span class="page-kicker">THE UNIVERSITY • HO CHI MINH CITY, VIETNAM</span><h1>A place to discover<br/>who you <em>could become.</em></h1><p>At Hong Bang International University, your next chapter starts with curiosity, community, and the courage to try.</p></header>
+ <section class="university-story"><div class="university-photo"><img src="/assets/hiu-campus.jpg" alt="Students gathering at the entrance to Hong Bang International University"/><span>HONG BANG INTERNATIONAL UNIVERSITY · EST. 1997</span></div><div class="story-copy"><span class="page-kicker">YOUR AMBITION BELONGS HERE</span><h2>More than a destination.<br/>A beginning.</h2><p>Choosing a university is choosing where your story goes next. Explore your interests, meet new people, and take the first step towards the future you imagine.</p><p>Our applicant portal brings your journey together — from your first application to your entrance examination. Clear next steps, at your own pace.</p><button class="btn btn-primary" on:click={apply}>Start your application <Icon name="arrow-right" size={15}/></button><a class="story-official" href="https://hiu.vn/en/home/" target="_blank" rel="noreferrer">Explore the official university website ↗</a></div></section>
+ <section class="editorial-values">{#each [{icon:'academic-cap',title:'Follow your curiosity',text:'Explore undergraduate, postgraduate and doctoral pathways.'},{icon:'users',title:'Find your community',text:'Begin a new chapter in Ho Chi Minh City, Vietnam.'},{icon:'arrow-right',title:'Take your next step',text:'Apply, complete your payment and sit your entrance exam in one place.'}] as item}<div><Icon name={item.icon} size={22}/><h3>{item.title}</h3><p>{item.text}</p></div>{/each}</section>
+</main>

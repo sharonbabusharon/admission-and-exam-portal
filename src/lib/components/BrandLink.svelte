@@ -42,14 +42,14 @@
 
   /* Public navbar */
   .brand-navbar .brand-img {
-    height: 40px;
+    height: 30px;
     width: auto;
     max-width: 220px;
   }
 
   /* App navbar (slightly more compact) */
   .brand-compact .brand-img {
-    height: 36px;
+    height: 28px;
     width: auto;
     max-width: 200px;
   }
@@ -81,15 +81,15 @@
 
   @media (max-width: 600px) {
     .brand-navbar .brand-img {
-      height: 34px;
+      height: 25px;
       max-width: 180px;
     }
     .brand-compact .brand-img {
-      height: 32px;
+      height: 25px;
       max-width: 170px;
     }
     .brand-footer .brand-img {
-      height: 48px;
+      height: 30px;
       max-width: 240px;
     }
   }

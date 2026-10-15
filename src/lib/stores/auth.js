@@ -21,7 +21,7 @@ const REDIRECT_KEY = 'admission_redirect_after_login';
  * To re-enable login & signup, simply change the value below to
  * `false` and save the file.
  * ------------------------------------------------------------------ */
-export const AUTH_DISABLED = true;
+export const AUTH_DISABLED = false;
 
 function readSession() {
   if (!browser) return null;

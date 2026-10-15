@@ -1,159 +1,41 @@
 <script>
   import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
   import Sidebar from '$lib/components/Sidebar.svelte';
   import PaymentModal from '$lib/components/PaymentModal.svelte';
   import Icon from '$lib/components/Icon.svelte';
   import { currentUser } from '$lib/stores/auth.js';
-  import {
-    applications,
-    ensureApplicationFor,
-    saveApplicationFor,
-    generateReferenceNumber
-  } from '$lib/stores/applications.js';
+  import { applications, ensureApplicationFor, saveApplicationFor, generateReferenceNumber } from '$lib/stores/applications.js';
   import { showToast } from '$lib/stores/toast.js';
-
   let paymentOpen = false;
-
-  onMount(() => {
-    if ($currentUser) ensureApplicationFor($currentUser);
-  });
-
-  function getApp(user, allApps) {
-    return user ? allApps[user.email] || null : null;
-  }
-
-  function getStatus(app) {
-    return app?.application_status || 'not_started';
-  }
-
+  onMount(() => { if ($currentUser) ensureApplicationFor($currentUser); });
+  $: app = $currentUser ? $applications[$currentUser.email] : null;
+  $: status = app?.application_status || 'not_started';
+  $: complete = Object.values(app?.step_completion || {}).filter(Boolean).length;
+  $: progress = status === 'exam_completed' ? 100 : status === 'payment_done' || status === 'exam_ready' ? 80 : status === 'submitted' ? 60 : Math.round(complete / 6 * 60);
+  $: paid = app?.payment_status === 'paid';
+  $: finished = status === 'exam_completed';
+  $: title = finished ? 'A milestone worth celebrating.' : paid ? 'You’re ready for your next challenge.' : status === 'submitted' ? 'Your application is in. What’s next?' : status === 'in_progress' ? 'Pick up where you left off.' : 'Every great journey starts here.';
   function confirmPayment() {
-    const user = $currentUser;
-    if (!user) return;
-    const app = getApp(user, $applications);
-    if (!app) return;
-    app.payment_status = 'paid';
-    app.application_status = 'payment_done';
-    app.exam_status = 'scheduled';
-    saveApplicationFor(user.email, app);
-    showToast('Payment successful! Your exam has been scheduled.', 'success');
-  }
-
-  function continueExam() {
-    const user = $currentUser;
-    if (!user) return;
-    const app = getApp(user, $applications);
-    if (!app) return;
-    app.application_status = 'exam_ready';
-    saveApplicationFor(user.email, app);
-    showToast('Exam module is being prepared.', 'success');
-  }
-
-  function startExam() {
-    showToast('Exam module is under development.', 'success');
+    if (!app || !$currentUser) return;
+    app.payment_status = 'paid'; app.application_status = 'payment_done'; app.exam_status = 'ready';
+    saveApplicationFor($currentUser.email, app);
+    showToast('Payment successful! Your entrance exam is ready.', 'success'); goto('/app/exam');
   }
 </script>
+<svelte:head><title>Your applicant workspace — HBIU</title></svelte:head>
+<div class="app-shell"><Sidebar {status}/><main class="app-main workspace">
+  <div class="workspace-breadcrumb"><span>YOUR ADMISSIONS JOURNEY</span><span class="intake-chip">2026 INTAKE</span></div>
+  <header class="workspace-header"><div><span class="workspace-greeting">A little ambition goes a long way.</span><h1>Welcome{status==='not_started' ? '' : ' back'}, {$currentUser?.name?.split(' ')[0]}.</h1><p>Your next chapter is taking shape. Let’s keep it moving.</p></div><a href="/contact" class="support-link"><Icon name="mail" size={15}/> Admissions support ↗</a></header>
+  <div class="workspace-grid"><section class="next-step-card"><div class="next-step-top"><span class="tiny-label">{finished ? 'JOURNEY COMPLETE' : 'YOUR NEXT STEP'}</span><span class="state-pill">{finished ? 'Completed' : paid ? 'Exam ready' : status==='submitted' ? 'Payment pending' : status==='in_progress' ? 'In progress' : 'Ready when you are'}</span></div><div class="next-step-icon"><Icon name={finished ? 'check-circle' : paid ? 'academic-cap' : status==='submitted' ? 'credit-card' : 'clipboard-document'} size={24}/></div><h2>{title}</h2><p>{finished ? 'Your entrance examination is complete. Take a look at your results and the answers you submitted.' : paid ? 'Your payment is confirmed. Read the instructions and begin your medical entrance examination whenever you’re ready.' : status==='submitted' ? 'You’ve completed the application. Confirm your application fee to unlock your entrance examination.' : 'Tell us about yourself, your academic background and your goals. You can save your progress and come back anytime.'}</p>
+  <div class="next-step-details">{#if finished}<span><Icon name="trophy" size={14}/> Score: {app.exam_result?.score ?? 0} / {app.exam_result?.maximum ?? 120}</span>{:else if paid}<span><Icon name="clock" size={14}/> 45 minutes</span><span><Icon name="document-text" size={14}/> 30 questions</span>{:else if status==='submitted'}<span><Icon name="credit-card" size={14}/> Application fee ₹1,239</span><span>Simulated payment</span>{:else}<span><Icon name="document-text" size={14}/> 6 simple sections</span><span><Icon name="check-circle" size={14}/> Save & resume anytime</span>{/if}</div>
+  {#if finished}<a class="btn btn-primary" href="/app/exam">View Results &amp; Answers <Icon name="arrow-right" size={15}/></a>{:else if paid}<a class="btn btn-primary" href="/app/exam">Continue with Entrance Exam <Icon name="arrow-right" size={15}/></a>{:else if status==='submitted'}<button class="btn btn-primary" on:click={()=>paymentOpen=true}>Continue with Payment <Icon name="arrow-right" size={15}/></button>{:else}<a class="btn btn-primary" href="/app/application">{status==='in_progress' ? 'Continue Your Application' : 'Start Your Application'} <Icon name="arrow-right" size={15}/></a>{/if}<a class="view-application" href="/app/application?view=readonly">View saved application ↗</a><div class="next-step-decoration" aria-hidden="true">{finished?'03':paid?'03':status==='submitted'?'02':'01'}</div></section>
+  <aside class="application-overview"><div class="overview-title"><h2><a href="/app/application?view=readonly">Your application ↗</a></h2><Icon name="document-text" size={17}/></div><div class="progress-number"><strong>{progress}<small>%</small></strong><span>of your journey<br/>completed</span></div><div class="workspace-progress"><div style={`width:${progress}%`}></div></div><div class="overview-reference"><span>APPLICATION REFERENCE</span><strong>{generateReferenceNumber($currentUser?.email)}</strong></div><ul class="overview-checklist"><li class:done={complete>0}><span>{complete>0?'✓':'○'}</span> <a href="/app/application?view=readonly">Application details ↗</a> <span>{complete>0 ? (status==='in_progress'?'In progress':'Complete'):'Not started'}</span></li><li class:done={paid}><span>{paid?'✓':'○'}</span> Application fee <span>{paid?'Paid':'Pending'}</span></li><li class:done={finished}><span>{finished?'✓':'○'}</span> Entrance exam <span>{finished?'Complete':paid?'Available':'Locked'}</span></li></ul></aside></div>
+  <section class="journey-section"><div class="journey-section-heading"><h2>The path ahead</h2><span>ONE STEP CLOSER TO YOUR FUTURE</span></div><div class="path-cards">{#each [{number:'01',icon:'clipboard-document',title:'Your application',text:'A little about you. A lot of possibility.',done:complete===6,active:!paid&&status!=='submitted'},{number:'02',icon:'credit-card',title:'Application payment',text:'One simple step to move forward.',done:paid,active:status==='submitted'},{number:'03',icon:'academic-cap',title:'Entrance examination',text:'Your opportunity to show what you know.',done:finished,active:paid&&!finished}] as item}<div class="path-card" class:path-active={item.active}><div class="path-top"><span>{item.number}</span><Icon name={item.icon} size={20}/></div><h3>{item.title}</h3><p>{item.text}</p><span class="path-state">{item.done?'✓ Completed':item.active?'You are here':'Coming up'}</span></div>{/each}</div></section>
+  <div class="workspace-footnote"><span><Icon name="shield-check" size={14}/> A simpler path from applicant to student.</span><a href="/steps">Read the application guide ↗</a></div>
+</main></div><PaymentModal bind:open={paymentOpen} on:confirm={confirmPayment}/>
+<style>
+.view-application{display:inline-flex;position:relative;z-index:1;margin:14px 0 0 16px;font-size:10px;color:#963d43;text-decoration:underline;text-underline-offset:3px}.overview-title a,.overview-checklist a{color:inherit}.overview-title a:hover,.overview-checklist a:hover{color:#963d43}
 
-<svelte:head>
-  <title>Dashboard — Hong Bang International University</title>
-</svelte:head>
-
-<div class="app-shell">
-  {#if $currentUser}
-    {@const app = getApp($currentUser, $applications)}
-    {@const status = getStatus(app)}
-    {@const refNumber = generateReferenceNumber($currentUser.email)}
-
-    <Sidebar {status} />
-
-    <main class="app-main">
-      <div class="welcome-header">
-        <h1>Dashboard</h1>
-        <p>Track your application progress and complete the next step</p>
-      </div>
-
-      <div class="dashboard-card">
-        {#if status === 'not_started'}
-          <div class="dashboard-card-icon icon-start">
-            <Icon name="clipboard-document" size={36} />
-          </div>
-          <h2>Welcome, {$currentUser.name}.</h2>
-          <p>Enter your details and submit your application to begin your journey with us.</p>
-          <a href="/app/application" class="btn btn-primary btn-lg">
-            <span>Start Your Application</span>
-            <Icon name="arrow-right" size={18} />
-          </a>
-
-        {:else if status === 'in_progress'}
-          <div class="dashboard-card-icon icon-progress">
-            <Icon name="cog" size={36} />
-          </div>
-          <h2>Your Application is in Progress</h2>
-          <p>Submit your application changes to continue your application.</p>
-          <a href="/app/application" class="btn btn-primary btn-lg">
-            <span>Continue Your Application</span>
-            <Icon name="arrow-right" size={18} />
-          </a>
-
-        {:else if status === 'submitted'}
-          <div class="dashboard-card-icon icon-submitted">
-            <Icon name="check-circle" size={40} />
-          </div>
-          <h2>Application Submitted Successfully</h2>
-          <p>Your application has been submitted successfully. Complete your payment to proceed.</p>
-          <div class="info-block">
-            <strong>Application Reference</strong>
-            <span class="value">{refNumber}</span>
-          </div>
-          <br />
-          <button type="button" class="btn btn-accent btn-lg" on:click={() => (paymentOpen = true)}>
-            <span>Continue with Payment</span>
-            <Icon name="arrow-right" size={18} />
-          </button>
-
-        {:else if status === 'payment_done'}
-          <div class="dashboard-card-icon icon-payment">
-            <Icon name="credit-card" size={36} />
-          </div>
-          <h2>Payment Confirmed</h2>
-          <p>Payment confirmed. Your entrance exam has been scheduled.</p>
-          <div class="exam-info-grid">
-            <div class="exam-info-cell">
-              <strong>Exam Date</strong>
-              <span>15 July 2026</span>
-            </div>
-            <div class="exam-info-cell">
-              <strong>Reporting Time</strong>
-              <span>9:00 AM</span>
-            </div>
-            <div class="exam-info-cell">
-              <strong>Duration</strong>
-              <span>2 Hours</span>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary btn-lg" on:click={continueExam}>
-            <span>Continue with Entrance Exam</span>
-            <Icon name="arrow-right" size={18} />
-          </button>
-
-        {:else if status === 'exam_ready'}
-          <div class="dashboard-card-icon icon-exam">
-            <Icon name="target" size={36} />
-          </div>
-          <h2>Your Exam is Ready</h2>
-          <p>Your exam is ready to begin. Click below to start.</p>
-          <div class="info-block">
-            <strong>Reference Number</strong>
-            <span class="value">{refNumber}</span>
-          </div>
-          <br />
-          <button type="button" class="btn btn-accent btn-lg" on:click={startExam}>
-            <span>Start Exam Now</span>
-            <Icon name="arrow-right" size={18} />
-          </button>
-        {/if}
-      </div>
-    </main>
-  {/if}
-</div>
-
-<PaymentModal bind:open={paymentOpen} on:confirm={confirmPayment} />
+.workspace{max-width:1300px;width:100%;margin:auto}.workspace-breadcrumb{display:flex;justify-content:space-between;align-items:center;font-size:8px;letter-spacing:1.5px;color:#6d7762}.intake-chip{border:1px solid #e3e7d7;padding:4px 9px;border-radius:4px;font-size:7px;letter-spacing:1px;background:#fcfdf8}.workspace-header{display:flex;justify-content:space-between;align-items:center;margin:27px 0}.workspace-greeting{font-size:10px;color:#6b7461}.workspace-header h1{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.9px;margin:5px 0;color:#3c4933}.workspace-header p{font-size:11px;color:#6d7761}.support-link{display:flex;align-items:center;gap:7px;color:#6e7562;font-size:10px}.workspace-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(245px,1fr);gap:23px}.next-step-card{border:1px solid #e3e5d8;background:#fff;border-radius:8px;padding:27px;position:relative;overflow:hidden}.next-step-top{display:flex;justify-content:space-between;align-items:center}.tiny-label{font-size:8px;letter-spacing:1.5px;color:#6c7360}.state-pill{font-size:8px;border-radius:4px;padding:4px 8px;background:#f5eee7;color:#886e58}.next-step-icon{display:grid;place-items:center;width:42px;height:42px;background:#f4eae6;color:#a45b59;border:1px solid #ecd9d1;border-radius:9px;margin:24px 0 16px}.next-step-card h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:27px;line-height:1.2;letter-spacing:-.6px;max-width:350px;color:#44513a}.next-step-card>p{font-size:11px;line-height:1.9;color:#6b7560;max-width:385px;margin:14px 0 18px}.next-step-details{display:flex;gap:18px;font-size:9px;color:#6d7461;margin-bottom:24px}.next-step-details>span{display:flex;align-items:center;gap:6px}.next-step-card .btn{font-size:11px;position:relative;z-index:1}.next-step-decoration{position:absolute;bottom:-28px;right:10px;font-family:'DM Serif Display',Georgia,serif;font-size:180px;line-height:1;color:#f4f5ed;pointer-events:none}.application-overview{background:#fcfdf9;border:1px solid #e1e7d4;border-radius:8px;padding:24px}.overview-title{display:flex;justify-content:space-between;align-items:center;color:#6e765f}.overview-title h2{font-size:12px;font-weight:500;color:#69765a}.progress-number{display:flex;gap:15px;align-items:center;margin:20px 0 12px}.progress-number strong{font-size:39px;line-height:1.2;color:#637658;font-weight:400;letter-spacing:-1px}.progress-number small{font-size:21px;color:#6f7665}.progress-number>span{font-size:9px;color:#6f7563;line-height:1.7}.workspace-progress{height:4px;border-radius:3px;background:#e9eddf;margin-bottom:23px}.workspace-progress>div{height:100%;background:#a3b58d;border-radius:3px;transition:width .4s}.overview-reference{padding:15px 0;border-top:1px solid #e6eadc;border-bottom:1px solid #e6eadc}.overview-reference span{display:block;font-size:7px;letter-spacing:1px;color:#6d7462;margin-bottom:5px}.overview-reference strong{font-size:11px;letter-spacing:1px;font-weight:500;color:#69765b}.overview-checklist{margin-top:15px;display:grid;gap:13px}.overview-checklist li{display:flex;align-items:center;gap:7px;font-size:10px;color:#69755a}.overview-checklist li>span:first-child{color:#6c7461}.overview-checklist li>span:last-child{margin-left:auto;font-size:8px;color:#6d7461}.overview-checklist li.done>span:first-child{color:#657a4e}.journey-section{margin-top:28px}.journey-section-heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.journey-section-heading h2{font-size:12px;font-weight:500;color:#6a765a}.journey-section-heading>span{font-size:7px;letter-spacing:1.3px;color:#6e7461}.path-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.path-card{padding:20px;background:#fafbf6;border:1px solid #e3e7d8;border-radius:6px}.path-card.path-active{background:white;border-color:#d9c8bb}.path-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;color:#6d7461}.path-top>span{font-family:'DM Serif Display',Georgia,serif;font-size:22px;color:#6d7362}.path-card h3{font-size:12px;font-weight:500;color:#69755b}.path-card p{font-size:9px;color:#6d7461;margin:7px 0 16px}.path-state{font-size:8px;color:#6c735f}.path-active .path-state{color:#9c635b}.workspace-footnote{display:flex;justify-content:space-between;margin-top:23px;padding-top:17px;border-top:1px solid #e5e9d9;font-size:9px;color:#6d7561}.workspace-footnote>span{display:flex;align-items:center;gap:7px}.workspace-footnote a{font-size:9px;color:#6d755f}@media(min-width:1500px){.workspace{padding:40px 50px}.next-step-card{padding:32px}.next-step-card h2{font-size:31px;max-width:400px}}@media(max-width:1100px){.workspace-grid{gap:16px;grid-template-columns:minmax(0,1.4fr) minmax(230px,1fr)}.next-step-card{padding:23px}.next-step-card h2{font-size:25px}.support-link{display:none}.next-step-details{gap:10px;font-size:8px}.path-card{padding:15px}.path-card p{min-height:28px}}@media(max-width:850px){.workspace-grid{grid-template-columns:1fr}.application-overview{display:none}.workspace-header{margin:20px 0}.workspace-header h1{font-size:30px}.next-step-decoration{font-size:150px}.journey-section-heading>span{display:none}.workspace-footnote>span{display:none}}@media(max-width:500px){.workspace-header h1{font-size:29px}.next-step-card{padding:23px}.next-step-card h2{font-size:27px}.path-cards{grid-template-columns:1fr}.path-card{padding:16px;display:grid;grid-template-columns:35px 1fr auto;align-items:center;column-gap:10px}.path-top{grid-row:1/3;margin:0;flex-direction:column;gap:4px}.path-top>svg{display:none}.path-card h3{grid-column:2;font-size:11px}.path-card p{grid-column:2;margin:4px 0 0;min-height:0;font-size:9px}.path-state{grid-column:3;grid-row:1/3}.next-step-details{font-size:9px;flex-wrap:wrap}.next-step-decoration{font-size:140px}.workspace-footnote{margin-top:18px}.workspace-greeting{font-size:9px}}
+</style>

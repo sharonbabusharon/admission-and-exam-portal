@@ -1,9 +1,11 @@
 <script>
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { currentUser } from '$lib/stores/auth.js';
   import {
     applications,
+    blankApplication,
     ensureApplicationFor,
     saveApplicationFor
   } from '$lib/stores/applications.js';
@@ -13,6 +15,13 @@
   const TOTAL_STEPS = 6;
   let currentStep = 1;
   let app = null;
+  $: readOnly = $page.url.searchParams.get('view') === 'readonly' || isReadOnly(app);
+
+  function isReadOnly(application) {
+    return $page.url.searchParams.get('view') === 'readonly' ||
+      ['submitted', 'payment_done', 'exam_ready', 'exam_completed'].includes(application?.application_status) ||
+      application?.payment_status === 'paid';
+  }
   let educationRecords = [{ qualification: '', board: '', year: '', percentage: '' }];
 
   const stepLabels = ['Course', 'Personal', 'Education', 'Guardian', 'Documents', 'Submit'];
@@ -28,12 +37,20 @@
 
   onMount(() => {
     if (!$currentUser) return;
-    ensureApplicationFor($currentUser);
-    app = JSON.parse(JSON.stringify($applications[$currentUser.email]));
+    if (!isReadOnly($applications[$currentUser.email])) ensureApplicationFor($currentUser);
+    app = JSON.parse(JSON.stringify($applications[$currentUser.email] || blankApplication($currentUser)));
     if (app.form_data.education_records?.length) {
       educationRecords = app.form_data.education_records.map((r) => ({ ...r }));
     }
-    currentStep = findFirstIncompleteStep();
+    try {
+      const interest = JSON.parse(sessionStorage.getItem('admission_program_interest') || 'null');
+      if (!isReadOnly(app) && interest && !app.form_data.level_of_program && ['B.Tech', 'B.Sc', 'BCA', 'MBA', 'M.Tech', 'PhD'].includes(interest.name)) {
+        app.form_data.level_of_program = interest.name;
+        app.form_data.program_level = interest.level;
+      }
+    } catch { /* A program preference is optional. */ }
+    const requestedStep = Number($page.url.searchParams.get('step'));
+    currentStep = isReadOnly(app) ? (Number.isInteger(requestedStep) && requestedStep >= 1 && requestedStep <= TOTAL_STEPS ? requestedStep : 1) : findFirstIncompleteStep();
   });
 
   function findFirstIncompleteStep() {
@@ -72,6 +89,7 @@
   }
 
   function saveCurrentStep() {
+    if (readOnly) return;
     if (currentStep === 1) {
       app.step_completion.step1_register = true;
       if (app.application_status === 'not_started') app.application_status = 'in_progress';
@@ -91,6 +109,7 @@
   }
 
   function handleNext() {
+    if (readOnly) { goToStep(currentStep + 1); return; }
     if (!validateRequired()) return;
     saveCurrentStep();
     if (currentStep === 5) {
@@ -102,20 +121,32 @@
     goToStep(currentStep + 1);
   }
 
+  function saveAndExit() {
+    if (readOnly) { goto('/app/dashboard'); return; }
+    app.form_data.education_records = educationRecords;
+    if (app.application_status === "not_started") app.application_status = "in_progress";
+    saveApplicationFor($currentUser.email, app);
+    showToast("Your progress has been saved.", "success");
+    goto("/app/dashboard");
+  }
+
   function handlePrev() {
     goToStep(currentStep - 1);
   }
 
   function addEducationRow() {
+    if (readOnly) return;
     educationRecords = [...educationRecords, { qualification: '', board: '', year: '', percentage: '' }];
   }
 
   function removeEducationRow(i) {
+    if (readOnly) return;
     if (educationRecords.length <= 1) return;
     educationRecords = educationRecords.filter((_, idx) => idx !== i);
   }
 
   function handleFile(key, e) {
+    if (readOnly) return;
     const file = e.target.files?.[0];
     if (!file) return;
     app.form_data.documents[key] = file.name;
@@ -151,17 +182,18 @@
   <title>Application Form — Hong Bang International University</title>
 </svelte:head>
 
-<main style="padding: 32px 20px;">
+<main class="application-page">
   {#if app}
     <div class="form-container">
       <div class="form-header">
-        <h1>Application Form 2026</h1>
-        <p>Complete all 6 steps to submit your application. Progress is saved automatically.</p>
+        <h1>Your application</h1>
+        <p>{readOnly ? 'Read-only · Your saved application details' : `Step ${currentStep} of 6 · A little more about you. Your next chapter starts here.`}</p>
       </div>
 
       <div class="steps-bar">
+        <span class="form-rail-title">YOUR APPLICATION CHECKLIST</span>
         {#each stepLabels as label, idx}
-          <div class={pillClass(app, idx, currentStep)}>
+          <button type="button" class={pillClass(app, idx, currentStep)} disabled={!readOnly && idx + 1 > findFirstIncompleteStep()} aria-current={currentStep === idx + 1 ? 'step' : undefined} on:click={() => goToStep(idx + 1)}>
             <div class="step-pill-num">
               {#if isStepDone(app, idx)}
                 <Icon name="check" size={14} strokeWidth={2.5} />
@@ -170,10 +202,13 @@
               {/if}
             </div>
             <div class="step-pill-label">{label}</div>
-          </div>
+          </button>
         {/each}
+        <p class="form-rail-note">{readOnly ? 'Select any section to view your saved details. Your application and exam results remain unchanged.' : 'A little at a time is just fine. Save your progress and return whenever you’re ready.'}</p>
       </div>
 
+      <fieldset class="application-fields" disabled={readOnly} aria-label={readOnly ? 'Saved application — read-only' : 'Application details'}>
+      {#if readOnly}<div class="read-only-notice"><Icon name="lock-closed" size={14}/><span>Read-only application · Select a section in the checklist to view your details.</span></div>{/if}
       <!-- Step 1: Course & Contact -->
       {#if currentStep === 1}
         <section class="step-content" id="step-1">
@@ -358,20 +393,20 @@
             {#each educationRecords as rec, i}
               <div class="education-row">
                 <div class="form-group">
-                  <label class="form-label">Qualification</label>
-                  <input type="text" class="form-input" bind:value={rec.qualification} placeholder="e.g. 10th / 12th / B.Tech" />
+                  <label class="form-label" for={`qualification-${i}`}>Qualification</label>
+                  <input id={`qualification-${i}`} type="text" class="form-input" bind:value={rec.qualification} placeholder="e.g. 10th / 12th / B.Tech" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Board / University</label>
-                  <input type="text" class="form-input" bind:value={rec.board} placeholder="e.g. CBSE" />
+                  <label class="form-label" for={`board-${i}`}>Board / University</label>
+                  <input id={`board-${i}`} type="text" class="form-input" bind:value={rec.board} placeholder="e.g. CBSE" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Year</label>
-                  <input type="number" class="form-input" bind:value={rec.year} placeholder="2024" min="1980" max="2030" />
+                  <label class="form-label" for={`year-${i}`}>Year</label>
+                  <input id={`year-${i}`} type="number" class="form-input" bind:value={rec.year} placeholder="2024" min="1980" max="2030" />
                 </div>
                 <div class="form-group">
-                  <label class="form-label">% / CGPA</label>
-                  <input type="text" class="form-input" bind:value={rec.percentage} placeholder="85" />
+                  <label class="form-label" for={`percentage-${i}`}>% / CGPA</label>
+                  <input id={`percentage-${i}`} type="text" class="form-input" bind:value={rec.percentage} placeholder="85" />
                 </div>
                 <button type="button" class="btn-icon" title="Remove" on:click={() => removeEducationRow(i)}>
                   <Icon name="x-mark" size={16} strokeWidth={2.25} />
@@ -509,9 +544,9 @@
             <div class="dashboard-card-icon icon-submitted" style="margin: 0 auto 24px;">
               <Icon name="check-circle" size={40} />
             </div>
-            <h2>Application Submitted</h2>
+            <h2>{readOnly ? 'Application Summary' : 'Application Submitted'}</h2>
             <p style="color: var(--color-text-light); margin: 12px 0 24px;">
-              Your application has been submitted successfully. Head over to your dashboard to complete payment.
+              {readOnly ? 'Your saved application is available in the checklist. Return to your dashboard for your current payment and exam status.' : 'Your application has been submitted successfully. Head over to your dashboard to complete payment.'}
             </p>
             <a href="/app/dashboard" class="btn btn-primary btn-lg">
               <span>Go to Dashboard</span>
@@ -520,15 +555,20 @@
           </div>
         </section>
       {/if}
+      </fieldset>
 
       <div class="form-actions">
+        <div class="action-left">
         <button type="button" class="btn btn-ghost" on:click={handlePrev} disabled={currentStep === 1}>
           <Icon name="arrow-left" size={18} />
           <span>Previous</span>
         </button>
+        {#if readOnly}<a class="save-exit" href="/app/dashboard">Back to dashboard</a>{:else}<button type="button" class="save-exit" on:click={saveAndExit}>Save &amp; exit</button>{/if}
+        </div>
+        <span class="action-context"><Icon name={readOnly ? 'lock-closed' : 'shield-check'} size={13}/> {readOnly ? 'Viewing only — no changes can be made' : 'Your progress, one step at a time'}</span>
         {#if currentStep < TOTAL_STEPS}
           <button type="button" class="btn btn-primary" on:click={handleNext}>
-            <span>{currentStep === 5 ? 'Submit Application' : 'Save & Next'}</span>
+            <span>{readOnly ? 'Next section' : currentStep === 5 ? 'Submit Application' : 'Save & Next'}</span>
             <Icon name="arrow-right" size={18} />
           </button>
         {:else}
@@ -545,6 +585,10 @@
 </main>
 
 <style>
+  .application-fields { grid-column: 2; border: 0; padding: 0; margin: 0; min-width: 0; }
+  .read-only-notice { display: flex; align-items: center; gap: 9px; padding: 11px 14px; margin-bottom: 14px; background: #f0f2e8; border: 1px solid #e0e5d5; border-radius: 6px; color: #68745d; font-size: 10px; }
+  .application-fields:disabled :global(input), .application-fields:disabled :global(select) { opacity: 1; color: #566448; background: #f8f9f4; cursor: default; -webkit-text-fill-color: #566448; }
+  .application-fields:disabled :global(.btn-add), .application-fields:disabled :global(.btn-icon), .application-fields:disabled :global(.upload-input) { display: none; }
   .upload-box-label {
     display: flex;
     align-items: center;

@@ -29,7 +29,7 @@
 
 <nav class="navbar">
   <div class="navbar-inner">
-    <BrandLink variant="navbar" />
+    <div class="nav-brand"><BrandLink variant="navbar" /><span class="brand-divider"></span><a class="portal-label" href="/">ADMISSIONS <span>2026</span></a></div>
 
     <button
       type="button"
@@ -42,11 +42,11 @@
     </button>
 
     <div class="navbar-links" class:active={menuOpen}>
-      <a href="/" class={navLinkClass($page.url.pathname, '/')} on:click={() => (menuOpen = false)}>Home</a>
+      <a href="/" class={navLinkClass($page.url.pathname, '/')} on:click={() => (menuOpen = false)}>Overview</a>
       <a href="/about" class={navLinkClass($page.url.pathname, '/about')} on:click={() => (menuOpen = false)}>About</a>
-      <a href="/steps" class={navLinkClass($page.url.pathname, '/steps')} on:click={() => (menuOpen = false)}>Steps to Apply</a>
+      <a href="/steps" class={navLinkClass($page.url.pathname, '/steps')} on:click={() => (menuOpen = false)}>How to apply</a>
       <a href="/contact" class={navLinkClass($page.url.pathname, '/contact')} on:click={() => (menuOpen = false)}>Contact</a>
-      <a href="/" class="navbar-link" on:click={handleLoginClick}>Exam Status</a>
+
 
       {#if $currentUser}
         <button type="button" class="btn btn-primary navbar-cta" on:click={handleLoginClick}>

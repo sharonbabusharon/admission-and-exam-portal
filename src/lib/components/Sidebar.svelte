@@ -14,6 +14,7 @@
     if (currentStatus === 'submitted') return 1;
     if (currentStatus === 'payment_done') return 2;
     if (currentStatus === 'exam_ready') return 2;
+    if (currentStatus === 'exam_completed') return 3;
     return 0;
   }
 
@@ -33,7 +34,7 @@
   <div class="sidebar-title">Application Tracker</div>
   <div class="tracker">
     {#each steps as s, idx}
-      <div class={getTrackerItemClass(idx, status)}>
+      <svelte:element this={s.key === 'application' ? 'a' : 'div'} href={s.key === 'application' ? '/app/application?view=readonly' : undefined} class={getTrackerItemClass(idx, status)}>
         <div class="tracker-marker">
           {#if isStepDone(idx, status)}
             <Icon name="check" size={14} strokeWidth={2.5} />
@@ -42,7 +43,7 @@
           {/if}
         </div>
         <div class="tracker-label">{s.label}</div>
-      </div>
+      </svelte:element>
     {/each}
   </div>
   <div class="sidebar-help">

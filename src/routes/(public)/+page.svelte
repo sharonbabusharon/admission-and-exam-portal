@@ -1,206 +1,34 @@
 <script>
-  import { openLoginModal, currentUser } from '$lib/stores/auth.js';
+  import { currentUser, openSignupModal } from '$lib/stores/auth.js';
   import { goto } from '$app/navigation';
   import Icon from '$lib/components/Icon.svelte';
   import content from '$lib/data/content.json';
-
-  const kd = content.key_dates;
-
-  function handleApply() {
-    if ($currentUser) {
-      goto('/app/dashboard');
-    } else {
-      openLoginModal('/app/dashboard');
-    }
+  let filter = 'All programs';
+  const filters = ['All programs', 'Undergraduate', 'Postgraduate', 'Doctoral'];
+  $: programs = content.programs.filter(p => filter === 'All programs' || p.level === filter);
+  function apply(program = null) {
+    if (program?.name && program?.level) sessionStorage.setItem('admission_program_interest', JSON.stringify(program));
+    else sessionStorage.removeItem('admission_program_interest');
+    if ($currentUser) goto('/app/dashboard'); else openSignupModal('/app/dashboard');
   }
 </script>
-
-<svelte:head>
-  <title>Hong Bang International University — Admissions Open 2026</title>
-</svelte:head>
-
-<!-- Hero -->
-<section class="hero">
-  <div class="container hero-inner">
-    <div>
-      <span class="hero-badge">HBIU ADMISSIONS OPEN 2026</span>
-      <h1>Your Future Starts at HBIU.</h1>
-      <p class="hero-subtitle">
-        Begin your journey at Hong Bang International University — applications are now open for
-        undergraduate, postgraduate and doctoral programs across our campus locations.
-      </p>
-      <div class="hero-actions">
-        <button type="button" class="btn btn-primary btn-lg" on:click={handleApply}>
-          <span>Apply Now</span>
-          <Icon name="arrow-right" size={18} />
-        </button>
-        <a href="/about" class="btn btn-outline btn-lg">Learn More</a>
-      </div>
+<svelte:head><title>Your next chapter — HBIU Admissions 2026</title><meta name="description" content="Begin your journey at Hong Bang International University. Explore programs, complete your application and take your entrance examination in one place." /></svelte:head>
+<main class="admissions-home">
+  <section class="welcome-hero">
+    <div class="hero-copy">
+      <div class="intake-label"><span></span> 2026 ADMISSIONS <i></i> HONG BANG INTERNATIONAL UNIVERSITY</div>
+      <h1>A world of possibility.<br />A future <em>that’s yours.</em></h1>
+      <p>Great things begin with a first step. Find your path at Hong Bang International University — and take it with confidence.</p>
+      <div class="welcome-actions"><button class="btn btn-primary" on:click={apply}>Start your application <Icon name="arrow-right" size={16}/></button><a href="#programs">Explore programs <span>↗</span></a></div>
+      <div class="hero-assurance"><span><Icon name="check-circle" size={14}/> Apply at your own pace</span><span><Icon name="check-circle" size={14}/> One seamless journey</span></div>
+      <div class="hero-bottom"><span>HO CHI MINH CITY, VIETNAM</span><span>EST. 1997</span></div>
     </div>
-
-    <div class="hero-card">
-      <h3>
-        <Icon name="calendar" size={20} />
-        <span>Important Dates</span>
-      </h3>
-      <div class="hero-card-list">
-        <div class="hero-card-item">
-          <span class="hero-card-item-label">Application Opens</span>
-          <span class="hero-card-item-value">{kd.application_open}</span>
-        </div>
-        <div class="hero-card-item">
-          <span class="hero-card-item-label">Application Closes</span>
-          <span class="hero-card-item-value">{kd.application_close}</span>
-        </div>
-        <div class="hero-card-item">
-          <span class="hero-card-item-label">Entrance Exam</span>
-          <span class="hero-card-item-value">{kd.exam_date}</span>
-        </div>
-        <div class="hero-card-item">
-          <span class="hero-card-item-label">Results Date</span>
-          <span class="hero-card-item-value">{kd.results_date}</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Highlights -->
-<section class="highlights">
-  <div class="container">
-    <div class="highlights-grid">
-      {#each content.stats as stat}
-        <div class="highlight-card">
-          <div class="highlight-icon"><Icon name={stat.icon} size={26} /></div>
-          <div class="highlight-number">{stat.number}</div>
-          <div class="highlight-label">{stat.label}</div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<!-- Programs -->
-<section class="section" id="programs">
-  <div class="container">
-    <h2 class="section-title">Programs Offered</h2>
-    <p class="section-subtitle">Choose from 42+ specialized programs across multiple disciplines</p>
-    <div class="programs-grid">
-      {#each content.programs as program}
-        <div class="program-card">
-          <span class="program-level">{program.level}</span>
-          <h3 class="program-name">{program.name}</h3>
-          <p class="program-specs">
-            <strong>Specializations:</strong>
-            {program.specializations}
-          </p>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<!-- Key Dates -->
-<section class="section key-dates">
-  <div class="container">
-    <h2 class="section-title">Key Dates</h2>
-    <p class="section-subtitle">Mark your calendar for the 2026 admission cycle</p>
-    <div class="key-dates-grid">
-      {#each content.key_date_cards as card}
-        <div class="key-date-card">
-          <div class="key-date-icon"><Icon name={card.icon} size={24} /></div>
-          <div class="key-date-label">{card.label}</div>
-          <div class="key-date-value">{kd[card.value_key]}</div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<!-- Visit Official Site CTA -->
-<section class="section visit-site">
-  <div class="container">
-    <div class="visit-site-card">
-      <div class="visit-site-text">
-        <h2>Discover more about HIU</h2>
-        <p>
-          Explore our programs, faculty, campuses, scholarships and student life on
-          the official Hong Bang International University website.
-        </p>
-      </div>
-      <a
-        href="https://hiu.vn/en/home/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn btn-primary btn-lg visit-site-btn"
-      >
-        <span>Visit Our Official Site</span>
-        <Icon name="arrow-right" size={18} />
-      </a>
-    </div>
-  </div>
-</section>
-
+    <div class="campus-frame"><img src="/assets/hiu-campus.jpg" alt="Students celebrating outside Hong Bang International University"/><div class="photo-overlay"></div><div class="campus-caption"><span>YOUR CAMPUS. YOUR COMMUNITY.</span><h2>Where ambition<br />finds its home.</h2></div><a href="/about" class="campus-link" aria-label="Discover Hong Bang International University">↗</a><div class="photo-coordinate">10.8031° N &nbsp; 106.7120° E</div></div>
+  </section>
+  <section class="journey-strip"><div class="journey-intro"><span class="kicker">FROM HELLO TO WHAT’S NEXT</span><h2>Your future, in three steps.</h2></div><div class="journey-steps">{#each [{n:'01',title:'Make it official',text:'Create your account & apply',icon:'user-plus'},{n:'02',title:'Take the next step',text:'Complete your application fee',icon:'credit-card'},{n:'03',title:'Show your potential',text:'Take your entrance examination',icon:'academic-cap'}] as step}<button on:click={apply}><span class="journey-number">{step.n}</span><div><h3>{step.title}</h3><p>{step.text}</p></div><Icon name={step.icon} size={19}/></button>{/each}</div></section>
+  <section class="program-section" id="programs"><div class="section-heading"><div><span class="kicker">A DIRECTION FOR EVERY AMBITION</span><h2>Find what moves you.</h2></div><p>Explore a new discipline.<br />Build a future around what you love.</p></div><div class="program-filters" role="group" aria-label="Filter programs">{#each filters as item}<button class:chosen={filter===item} aria-pressed={filter===item} on:click={()=>filter=item}>{item}</button>{/each}<span>{programs.length} programs to explore</span></div><div class="degree-grid">{#each programs as program,i}<button class="degree-card" on:click={() => apply(program)}><div class="degree-top"><span>{program.level}</span><Icon name="academic-cap" size={18}/></div><h3>{program.name}</h3><p>{program.specializations}</p><div class="degree-bottom"><span>Apply to this program</span><span>↗</span></div></button>{/each}</div></section>
+  <section class="home-cta"><div><span class="kicker">YOUR STORY STARTS HERE</span><h2>Let’s make your next chapter happen.</h2><p>Your application, entrance exam, and next steps. All in one place.</p></div><button class="btn btn-primary" on:click={apply}>Begin your application <Icon name="arrow-right" size={16}/></button></section>
+</main>
 <style>
-  .hero-card h3 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .visit-site-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    padding: 40px 48px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-    color: #fff;
-    border-radius: var(--radius-lg, 16px);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .visit-site-text h2 {
-    margin: 0 0 8px 0;
-    color: #fff;
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
-
-  .visit-site-text p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 640px;
-    line-height: 1.6;
-  }
-
-  .visit-site-btn {
-    flex-shrink: 0;
-    background: #fff;
-    color: var(--color-primary);
-    border: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .visit-site-btn:hover {
-    background: var(--color-bg-alt);
-    color: var(--color-primary-dark);
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 720px) {
-    .visit-site-card {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 28px 24px;
-      gap: 20px;
-    }
-
-    .visit-site-btn {
-      width: 100%;
-      justify-content: center;
-    }
-  }
+.admissions-home{background:#faf9f6}.welcome-hero{max-width:1300px;margin:auto;display:grid;grid-template-columns:1.12fr 1fr;gap:45px;padding:38px 44px 32px;min-height:490px}.hero-copy{padding:23px 0 0;display:flex;flex-direction:column;align-items:flex-start}.intake-label{display:flex;align-items:center;gap:8px;font-size:8px;letter-spacing:1.15px;font-weight:600;color:#786f64}.intake-label>span{width:6px;height:6px;border-radius:50%;background:#a44145;box-shadow:0 0 0 4px #f1e7e4}.intake-label i{height:10px;width:1px;background:#d8d2c8;margin:0 4px}h1{font-family:'DM Serif Display',Georgia,serif;font-size:clamp(35px,3.65vw,53px);line-height:1.14;font-weight:400;letter-spacing:-1.8px;color:#292b2b;margin:25px 0 19px}h1 em{font-weight:400;color:#a14145}.hero-copy>p{max-width:400px;font-size:13px;line-height:1.85;color:#6f716e}.welcome-actions{display:flex;align-items:center;gap:25px;margin:25px 0 22px}.welcome-actions>a{color:#656b65;font-size:11px;display:flex;gap:13px}.hero-assurance{display:flex;gap:18px;color:#71756e;font-size:9px}.hero-assurance>span{display:flex;align-items:center;gap:5px}.hero-bottom{display:flex;justify-content:space-between;width:100%;margin-top:auto;padding-top:30px;font-size:8px;letter-spacing:1.4px;color:#70716a}.campus-frame{position:relative;overflow:hidden;border-radius:4px;min-height:420px}.campus-frame>img{width:100%;height:100%;object-fit:cover;position:absolute;object-position:55% center;animation:photo-reveal 1.2s ease-out}.photo-overlay{position:absolute;inset:0;background:linear-gradient(180deg,#14201d00 35%,#10221dcc)}.campus-caption{position:absolute;left:28px;bottom:45px;color:white}.campus-caption>span{font-size:8px;letter-spacing:1.6px;opacity:.7}.campus-caption h2{font-family:'DM Serif Display',Georgia,serif;font-size:33px;line-height:1.17;font-weight:400;margin-top:11px}.campus-link{position:absolute;right:24px;bottom:48px;width:40px;height:40px;border:1px solid #ffffff60;border-radius:50%;display:grid;place-items:center;color:white;font-size:20px;transition:.2s}.campus-link:hover{background:white;color:#263b30}.photo-coordinate{position:absolute;bottom:15px;left:28px;color:#ffffff80;font-size:7px;letter-spacing:1.2px}.journey-strip{max-width:1212px;margin:0 auto 0;padding:28px 0 30px;border-top:1px solid #e3e0d9;border-bottom:1px solid #e3e0d9;display:grid;grid-template-columns:250px 1fr;gap:25px;align-items:center}.journey-intro h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:21px;margin-top:7px;letter-spacing:-.4px}.kicker{font-size:8px;font-weight:600;letter-spacing:1.5px;color:#8d6b66}.journey-steps{display:grid;grid-template-columns:repeat(3,1fr)}.journey-steps>button{display:flex;align-items:center;gap:12px;padding:10px 20px;text-align:left;border-left:1px solid #e5e1da}.journey-steps>button>svg{margin-left:auto;color:#7d7265}.journey-number{font-family:'DM Serif Display',Georgia,serif;color:#7a7061;font-size:25px}.journey-steps h3{font-size:11px;font-weight:600;color:#424943}.journey-steps p{font-size:9px;color:#6e726b;margin-top:4px}.program-section{max-width:1212px;margin:auto;padding:55px 0}.section-heading{display:flex;align-items:center;justify-content:space-between}.section-heading h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:34px;letter-spacing:-.8px;margin-top:8px}.section-heading>p{font-size:11px;color:#6f726b;line-height:1.8}.program-filters{display:flex;align-items:center;gap:5px;margin:23px 0}.program-filters button{font-size:10px;color:#6d736b;border:1px solid transparent;padding:8px 14px;border-radius:4px}.program-filters .chosen{background:white;border-color:#e1ddd6;color:#343e34;box-shadow:0 2px 4px #00000003}.program-filters>span{margin-left:auto;font-size:9px;color:#71756d}.degree-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.degree-card{background:white;border:1px solid #e5e2dc;border-radius:5px;padding:23px;text-align:left;transition:transform .25s,border-color .25s,box-shadow .25s}.degree-card:hover{transform:translateY(-4px);border-color:#beaaa0;box-shadow:0 12px 25px #302a1e08}.degree-top{display:flex;justify-content:space-between;align-items:center;color:#816f64}.degree-top>span{font-size:8px;text-transform:uppercase;letter-spacing:1px}.degree-card h3{font-family:'DM Serif Display',Georgia,serif;font-size:27px;font-weight:400;margin:18px 0 10px;color:#303b31}.degree-card p{font-size:11px;color:#6d736a;line-height:1.7;min-height:38px}.degree-bottom{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #efede8;margin-top:20px;padding-top:12px;font-size:9px;color:#6e746c}.degree-bottom>span:last-child{color:#a34447;font-size:16px}.home-cta{max-width:1212px;margin:0 auto 48px;background:#f0eee7;border:1px solid #e5e1d6;border-radius:5px;padding:30px;display:flex;align-items:center;justify-content:space-between;gap:20px}.home-cta h2{font-family:'DM Serif Display',Georgia,serif;font-size:26px;font-weight:400;letter-spacing:-.4px;margin:8px 0}.home-cta p{font-size:11px;color:#707568}@keyframes photo-reveal{from{transform:scale(1.06)}to{transform:scale(1)}}@media(min-width:1500px){.welcome-hero{padding-top:48px;min-height:540px}.campus-frame{min-height:455px}}@media(max-width:1300px){.journey-strip,.program-section,.home-cta{margin-left:44px;margin-right:44px}.journey-strip{grid-template-columns:220px 1fr}.journey-steps>button{padding:8px 12px}.journey-steps>button>svg{display:none}}@media(max-width:900px){.welcome-hero{gap:25px;padding:30px 24px}.hero-copy{padding-top:8px}.intake-label{font-size:7px;letter-spacing:.5px}.hero-assurance{gap:10px;font-size:8px}.welcome-actions{gap:15px}.welcome-actions .btn{font-size:11px;padding:11px 14px}.journey-strip,.program-section,.home-cta{margin-left:24px;margin-right:24px}.journey-strip{grid-template-columns:1fr;gap:15px}.journey-steps>button:first-child{border-left:0;padding-left:0}.degree-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.welcome-hero{grid-template-columns:1fr;padding:25px 20px;gap:25px}.hero-copy{padding:0}h1{font-size:39px;margin:24px 0 16px;letter-spacing:-1.5px}.hero-copy>p{font-size:12px}.hero-bottom{display:none}.campus-frame{min-height:280px}.campus-frame>img{object-position:center 45%}.campus-caption h2{font-size:26px}.campus-caption{bottom:35px;left:22px}.campus-link{bottom:35px}.photo-coordinate{left:22px;bottom:11px}.hero-assurance{font-size:9px}.welcome-actions{margin-top:20px}.journey-strip,.program-section,.home-cta{margin-left:20px;margin-right:20px}.journey-steps{grid-template-columns:1fr}.journey-steps>button{border-left:0;border-top:1px solid #e7e2d9;padding:13px 0;gap:20px}.journey-steps>button>svg{display:block}.journey-steps h3{font-size:12px}.journey-steps p{font-size:10px}.section-heading>p{display:none}.section-heading h2{font-size:30px}.program-section{padding-top:35px}.program-filters{gap:0;flex-wrap:wrap}.program-filters button{padding:7px 9px;font-size:9px}.program-filters>span{display:none}.degree-grid{gap:10px}.degree-card{padding:16px}.degree-card h3{font-size:24px}.degree-card p{font-size:10px;min-height:65px}.degree-bottom{font-size:8px}.home-cta{padding:24px;align-items:flex-start;flex-direction:column}.home-cta h2{font-size:27px}}@media(prefers-reduced-motion:reduce){.campus-frame>img{animation:none}.degree-card{transition:none}}
 </style>

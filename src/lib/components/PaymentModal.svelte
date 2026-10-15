@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import Icon from './Icon.svelte';
+  import { dialog } from '$lib/actions/dialog.js';
 
   export let open = false;
 
@@ -23,11 +24,11 @@
 
 {#if open}
   <div class="modal-overlay active" role="dialog" aria-modal="true" on:click={handleOverlayClick}>
-    <div class="modal" style="max-width: 520px;">
+    <div class="modal" style="max-width: 420px;" use:dialog={close}>
       <button type="button" class="modal-close" aria-label="Close" on:click={close}>
         <Icon name="x-mark" size={18} />
       </button>
-      <div class="modal-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
+      <div class="modal-icon" style="background: #f3e7e3; color: #963d43;">
         <Icon name="credit-card" size={28} />
       </div>
       <h2 class="modal-title">Application Fee Payment</h2>

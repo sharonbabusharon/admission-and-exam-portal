@@ -1,0 +1,565 @@
+{
+  "id": "medical-demo-v1",
+  "title": "Medical Entrance Examination",
+  "durationMinutes": 45,
+  "marking": {
+    "correct": 4,
+    "incorrect": -1,
+    "unanswered": 0
+  },
+  "contentNote": "A shortened demonstration using adapted NEET 2024 questions and SATHEE NEET/AIPMT question collections. This is not an official NEET paper. Collection year labels have not been independently authenticated.",
+  "sources": [
+    {
+      "id": "neet2024",
+      "title": "NEET UG 2024 R1 paper, selected Physics questions 4, 5, 7, 15 and 37",
+      "url": "https://kapp-bucket.s3.ap-south-1.amazonaws.com/study-materials/neet-2024-question-paper-2193.pdf"
+    },
+    {
+      "id": "motion",
+      "title": "SATHEE IIT Kanpur — Laws of Motion PYQ collection",
+      "url": "https://www.sathee.iitk.ac.in/pyqs/neet/database/chapter/laws-of-motion/"
+    },
+    {
+      "id": "moles",
+      "title": "SATHEE IIT Kanpur — Basic Concepts of Chemistry PYQ collection",
+      "url": "https://sathee.iitk.ac.in/pyqs/neet/chapterwise/chemistry/some-basic-concepts-of-chemistry/"
+    },
+    {
+      "id": "atomic",
+      "title": "SATHEE IIT Kanpur — Atomic Structure and Chemical Bonding PYQ collection",
+      "url": "https://sathee.iitk.ac.in/pyqs/neet/chapterwise/chemistry/structure-of-atom-and-chemical-bonding/"
+    },
+    {
+      "id": "equilibrium",
+      "title": "SATHEE IIT Kanpur — Chemical and Ionic Equilibrium PYQ collection",
+      "url": "https://sathee.iitk.ac.in/pyqs/neet/chapterwise/chemistry/chemical-equilibrium-and-ionic-equilibrium/"
+    },
+    {
+      "id": "classification",
+      "title": "SATHEE IIT Kanpur — Biological Classification PYQ collection",
+      "url": "https://www.sathee.iitk.ac.in/pyqs/neet/chapterwise/biology/biological-classification/"
+    },
+    {
+      "id": "photosynthesis",
+      "title": "SATHEE IIT Kanpur — Photosynthesis PYQ collection",
+      "url": "https://sathee.iitk.ac.in/pyqs/neet/chapterwise/biology/photosynthesis-in-higher-plants/"
+    },
+    {
+      "id": "living",
+      "title": "SATHEE IIT Kanpur — The Living World PYQ collection",
+      "url": "https://www.sathee.iitk.ac.in/pyqs/neet/chapterwise/biology/the-living-world/"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q01",
+      "subject": "Physics",
+      "topic": "Electric circuits",
+      "sourceId": "neet2024",
+      "sourceQuestion": 4,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "A 10 V cell has internal resistance 1 Ω and supplies a 4 Ω resistor. Find its terminal voltage.",
+      "options": [
+        "6 V",
+        "8 V",
+        "10 V",
+        "4 V"
+      ],
+      "answer": 1,
+      "explanation": "Current = 10/5 = 2 A; terminal voltage = 10 − 2 = 8 V."
+    },
+    {
+      "id": "q02",
+      "subject": "Physics",
+      "topic": "Transformers",
+      "sourceId": "neet2024",
+      "sourceQuestion": 5,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "An ideal transformer has primary-to-secondary turns ratio 1:2. Find secondary-to-primary voltage ratio.",
+      "options": [
+        "2:1",
+        "1:1",
+        "1:4",
+        "1:2"
+      ],
+      "answer": 0,
+      "explanation": "Voltage is proportional to the number of turns."
+    },
+    {
+      "id": "q03",
+      "subject": "Physics",
+      "topic": "Dimensions",
+      "sourceId": "neet2024",
+      "sourceQuestion": 7,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which pair, like solid angle, is dimensionless?",
+      "options": [
+        "Stress and angle",
+        "Strain and arc length",
+        "Angular speed and stress",
+        "Strain and plane angle"
+      ],
+      "answer": 3,
+      "explanation": "Strain and plane angle are ratios of lengths."
+    },
+    {
+      "id": "q04",
+      "subject": "Physics",
+      "topic": "Circular motion",
+      "sourceId": "neet2024",
+      "sourceQuestion": 15,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "In uniform circular motion, which describes velocity and acceleration?",
+      "options": [
+        "Both constant",
+        "Velocity constant; acceleration varies",
+        "Both vary in direction",
+        "Acceleration is zero"
+      ],
+      "answer": 2,
+      "explanation": "Both vectors continually change direction."
+    },
+    {
+      "id": "q05",
+      "subject": "Physics",
+      "topic": "Optics",
+      "sourceId": "neet2024",
+      "sourceQuestion": 37,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "For a telescope in normal adjustment, objective focal length is 140 cm and eyepiece focal length is 5 cm. Find magnification magnitude.",
+      "options": [
+        "28",
+        "17",
+        "32",
+        "34"
+      ],
+      "answer": 0,
+      "explanation": "Magnification magnitude = 140/5 = 28."
+    },
+    {
+      "id": "q06",
+      "subject": "Physics",
+      "topic": "Newton’s laws",
+      "sourceId": "motion",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "A 10 kg object experiences a net force of 50 N. Calculate its acceleration.",
+      "options": [
+        "0.2 m/s²",
+        "5 m/s²",
+        "10 m/s²",
+        "500 m/s²"
+      ],
+      "answer": 1,
+      "explanation": "Newton’s second law gives a = F/m = 5 m/s²."
+    },
+    {
+      "id": "q07",
+      "subject": "Physics",
+      "topic": "Pulley systems",
+      "sourceId": "motion",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Masses 2 kg and 3 kg hang over a frictionless, massless pulley. With g = 9.8 m/s², find acceleration.",
+      "options": [
+        "9.8 m/s²",
+        "4.9 m/s²",
+        "1.96 m/s²",
+        "0 m/s²"
+      ],
+      "answer": 2,
+      "explanation": "Acceleration = (3 − 2)g/(3 + 2) = 1.96 m/s²."
+    },
+    {
+      "id": "q08",
+      "subject": "Physics",
+      "topic": "Friction",
+      "sourceId": "motion",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "A block rests on a 30° incline with static friction coefficient 0.4. What happens on release?",
+      "options": [
+        "Remains at rest",
+        "Slides down",
+        "Moves uphill",
+        "Loses contact"
+      ],
+      "answer": 1,
+      "explanation": "tan 30° exceeds 0.4, so static friction cannot hold the block."
+    },
+    {
+      "id": "q09",
+      "subject": "Physics",
+      "topic": "Vertical circles",
+      "sourceId": "motion",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "A stone on a 1 m string just completes a vertical circle. With g = 9.8 m/s², find minimum speed at the top.",
+      "options": [
+        "1.00 m/s",
+        "9.80 m/s",
+        "4.43 m/s",
+        "3.13 m/s"
+      ],
+      "answer": 3,
+      "explanation": "At limiting speed, tension is zero and v = √(gr)."
+    },
+    {
+      "id": "q10",
+      "subject": "Physics",
+      "topic": "Connected bodies",
+      "sourceId": "motion",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Masses 5 kg and 2 kg are joined over an ideal pulley. Calculate acceleration using g = 9.8 m/s².",
+      "options": [
+        "4.2 m/s²",
+        "7.0 m/s²",
+        "2.8 m/s²",
+        "9.8 m/s²"
+      ],
+      "answer": 0,
+      "explanation": "Acceleration = (5 − 2)g/(5 + 2) = 4.2 m/s²."
+    },
+    {
+      "id": "q11",
+      "subject": "Chemistry",
+      "topic": "Mole concept",
+      "sourceId": "moles",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "What mass contains 3.011 × 10²³ glucose molecules? Use molar mass 180 g/mol and Nₐ = 6.022 × 10²³/mol.",
+      "options": [
+        "180 g",
+        "45 g",
+        "90 g",
+        "360 g"
+      ],
+      "answer": 2,
+      "explanation": "The sample contains half a mole, with mass 90 g."
+    },
+    {
+      "id": "q12",
+      "subject": "Chemistry",
+      "topic": "Molarity",
+      "sourceId": "moles",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Dissolve 5.85 g NaCl to make 500 mL solution. For molar mass 58.5 g/mol, determine molarity.",
+      "options": [
+        "0.1 M",
+        "0.2 M",
+        "0.5 M",
+        "2.0 M"
+      ],
+      "answer": 1,
+      "explanation": "There are 0.1 mol in 0.5 L, giving 0.2 M."
+    },
+    {
+      "id": "q13",
+      "subject": "Chemistry",
+      "topic": "Molecular formula",
+      "sourceId": "moles",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "A compound is 40% C, 6.7% H and 53.3% O, with molar mass 180 g/mol. Choose its molecular formula.",
+      "options": [
+        "CH₂O",
+        "C₂H₄O₂",
+        "C₃H₆O₃",
+        "C₆H₁₂O₆"
+      ],
+      "answer": 3,
+      "explanation": "Empirical formula CH₂O has formula mass 30; multiply by six."
+    },
+    {
+      "id": "q14",
+      "subject": "Chemistry",
+      "topic": "Normality",
+      "sourceId": "moles",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "For complete acid–base neutralisation, a 0.5 M H₂SO₄ solution has what normality?",
+      "options": [
+        "1 N",
+        "0.25 N",
+        "0.5 N",
+        "2 N"
+      ],
+      "answer": 0,
+      "explanation": "Each mole supplies two acid equivalents: N = 2M."
+    },
+    {
+      "id": "q15",
+      "subject": "Chemistry",
+      "topic": "Ideal gases",
+      "sourceId": "moles",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "An ideal gas occupies 22.4 L per mole at the stated STP. What volume do 2.5 mol occupy?",
+      "options": [
+        "22.4 L",
+        "44.8 L",
+        "56 L",
+        "112 L"
+      ],
+      "answer": 2,
+      "explanation": "Volume = 2.5 × 22.4 = 56 L."
+    },
+    {
+      "id": "q16",
+      "subject": "Chemistry",
+      "topic": "Quantum numbers",
+      "sourceId": "atomic",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Choose the forbidden (n, l, mₗ, mₛ) combination.",
+      "options": [
+        "(3, 0, 0, +½)",
+        "(2, 1, −1, −½)",
+        "(4, 3, 4, +½)",
+        "(1, 0, 0, −½)"
+      ],
+      "answer": 2,
+      "explanation": "For l = 3, mₗ must lie from −3 to +3."
+    },
+    {
+      "id": "q17",
+      "subject": "Chemistry",
+      "topic": "Molecular shapes",
+      "sourceId": "atomic",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Four bonds and one lone pair surround sulfur in SF₄. What is the molecular shape?",
+      "options": [
+        "Tetrahedral",
+        "Trigonal bipyramidal",
+        "See-saw",
+        "Square planar"
+      ],
+      "answer": 2,
+      "explanation": "The AX₄E arrangement gives a see-saw molecular geometry."
+    },
+    {
+      "id": "q18",
+      "subject": "Chemistry",
+      "topic": "Equilibrium constants",
+      "sourceId": "equilibrium",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "For N₂ + 3H₂ ⇌ 2NH₃, equilibrium concentrations are 0.5, 0.8 and 0.4 M respectively. Calculate Kc.",
+      "options": [
+        "0.625",
+        "1.6",
+        "0.256",
+        "0.16"
+      ],
+      "answer": 0,
+      "explanation": "Kc = 0.4²/(0.5 × 0.8³) = 0.625."
+    },
+    {
+      "id": "q19",
+      "subject": "Chemistry",
+      "topic": "Acid–base equilibrium",
+      "sourceId": "equilibrium",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Estimate pH for a 0.01 M weak monoprotic acid with Ka = 10⁻⁵.",
+      "options": [
+        "2.0",
+        "3.0",
+        "3.5",
+        "5.0"
+      ],
+      "answer": 2,
+      "explanation": "Using [H⁺] ≈ √(Ka C), pH ≈ 3.5."
+    },
+    {
+      "id": "q20",
+      "subject": "Chemistry",
+      "topic": "Le Chatelier’s principle",
+      "sourceId": "equilibrium",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "For exothermic 2SO₂(g) + O₂(g) ⇌ 2SO₃(g), which change favours SO₃ at equilibrium?",
+      "options": [
+        "Raise temperature",
+        "Lower pressure",
+        "Remove oxygen",
+        "Lower temperature"
+      ],
+      "answer": 3,
+      "explanation": "Cooling favours the heat-producing forward reaction."
+    },
+    {
+      "id": "q21",
+      "subject": "Biology",
+      "topic": "Microorganisms",
+      "sourceId": "classification",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which structural feature is absent in Mycoplasma?",
+      "options": [
+        "Genetic material",
+        "Cell wall",
+        "Plasma membrane",
+        "Ribosomes"
+      ],
+      "answer": 1,
+      "explanation": "Mycoplasma lack a cell wall."
+    },
+    {
+      "id": "q22",
+      "subject": "Biology",
+      "topic": "Protists",
+      "sourceId": "classification",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Diatoms are classified within which group?",
+      "options": [
+        "Chrysophytes",
+        "Euglenoids",
+        "Slime moulds",
+        "Dinoflagellates"
+      ],
+      "answer": 0,
+      "explanation": "Diatoms belong to the chrysophytes."
+    },
+    {
+      "id": "q23",
+      "subject": "Biology",
+      "topic": "Viruses",
+      "sourceId": "classification",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "What name is given to viruses that parasitise bacteria?",
+      "options": [
+        "Viroids",
+        "Prions",
+        "Bacteriophages",
+        "Mycoplasmas"
+      ],
+      "answer": 2,
+      "explanation": "Bacteriophages infect bacterial cells."
+    },
+    {
+      "id": "q24",
+      "subject": "Biology",
+      "topic": "Infectious agents",
+      "sourceId": "classification",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which composition distinguishes a viroid?",
+      "options": [
+        "DNA and capsid",
+        "RNA and capsid",
+        "Protein alone",
+        "RNA without a capsid"
+      ],
+      "answer": 3,
+      "explanation": "Viroids are infectious RNA lacking a protein coat."
+    },
+    {
+      "id": "q25",
+      "subject": "Biology",
+      "topic": "Archaea",
+      "sourceId": "classification",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which habitat is especially characteristic of many archaebacteria?",
+      "options": [
+        "Only animal blood",
+        "Extreme environmental conditions",
+        "Only sterile water",
+        "Only plant leaves"
+      ],
+      "answer": 1,
+      "explanation": "Many archaea tolerate high temperature, salt or extreme pH."
+    },
+    {
+      "id": "q26",
+      "subject": "Biology",
+      "topic": "Photosynthesis",
+      "sourceId": "photosynthesis",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which colour is generally most efficient for photosynthesis among these choices?",
+      "options": [
+        "Green",
+        "Yellow",
+        "Red",
+        "Orange"
+      ],
+      "answer": 2,
+      "explanation": "Chlorophyll absorbs red wavelengths efficiently."
+    },
+    {
+      "id": "q27",
+      "subject": "Biology",
+      "topic": "Limiting factors",
+      "sourceId": "photosynthesis",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "In Blackman’s principle, the rate of photosynthesis is controlled by which factor?",
+      "options": [
+        "The factor in shortest effective supply",
+        "Every factor equally at every instant",
+        "Light alone",
+        "Temperature alone"
+      ],
+      "answer": 0,
+      "explanation": "The limiting factor restricts the overall rate."
+    },
+    {
+      "id": "q28",
+      "subject": "Biology",
+      "topic": "Light saturation",
+      "sourceId": "photosynthesis",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "After light saturation, adding light no longer increases photosynthesis. Which resource commonly becomes limiting?",
+      "options": [
+        "Nitrogen gas",
+        "Oxygen",
+        "Chlorophyll colour",
+        "Carbon dioxide"
+      ],
+      "answer": 3,
+      "explanation": "Once light is sufficient, CO₂ supply commonly limits the rate."
+    },
+    {
+      "id": "q29",
+      "subject": "Biology",
+      "topic": "Biodiversity",
+      "sourceId": "living",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which broad climatic region generally supports the greatest species diversity?",
+      "options": [
+        "Polar",
+        "Tropical",
+        "Temperate",
+        "Desert"
+      ],
+      "answer": 1,
+      "explanation": "Tropical conditions support high biodiversity."
+    },
+    {
+      "id": "q30",
+      "subject": "Biology",
+      "topic": "Conservation",
+      "sourceId": "living",
+      "sourceQuestion": null,
+      "adaptation": "Reworded for a concise demo; options may be reordered or supplied.",
+      "text": "Which feature supports recognition of the Western Ghats as a biodiversity hotspot?",
+      "options": [
+        "Low rainfall",
+        "Absence of people",
+        "High endemism under threat",
+        "Only introduced species"
+      ],
+      "answer": 2,
+      "explanation": "Hotspots combine substantial endemism with habitat threat."
+    }
+  ]
+}

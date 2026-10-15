@@ -1,76 +1,13 @@
 <script>
-  import { openLoginModal } from '$lib/stores/auth.js';
-  import Icon from '$lib/components/Icon.svelte';
-  import content from '$lib/data/content.json';
-
-  const kd = content.key_dates;
+ import {currentUser,openSignupModal} from '$lib/stores/auth.js';
+ import {goto} from '$app/navigation';
+ import Icon from '$lib/components/Icon.svelte';
+ import content from '$lib/data/content.json';
+ function apply(){if($currentUser)goto('/app/dashboard');else openSignupModal('/app/dashboard');}
 </script>
-
-<svelte:head>
-  <title>Steps to Apply — Hong Bang International University</title>
-</svelte:head>
-
-<header class="page-header">
-  <div class="container">
-    <h1>Steps to Apply</h1>
-    <p>A simple 6-step process to complete your application</p>
-  </div>
-</header>
-
-<section class="section">
-  <div class="container">
-    <div class="timeline">
-      {#each content.apply_steps as step, idx}
-        <div class="timeline-item">
-          <div class="timeline-marker">{idx + 1}</div>
-          <div class="timeline-card">
-            <h3>{step.title}</h3>
-            <p>{step.text}</p>
-          </div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<section class="section key-dates">
-  <div class="container">
-    <h2 class="section-title">Key Dates</h2>
-    <p class="section-subtitle">Don't miss these important deadlines</p>
-    <div class="key-dates-grid">
-      {#each content.key_date_cards as card}
-        <div class="key-date-card">
-          <div class="key-date-icon"><Icon name={card.icon} size={24} /></div>
-          <div class="key-date-label">{card.label}</div>
-          <div class="key-date-value">{kd[card.value_key]}</div>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Eligibility Criteria</h2>
-    <p class="section-subtitle">Minimum requirements per program level</p>
-    <div class="eligibility-grid">
-      {#each content.eligibility as item}
-        <div class="eligibility-card">
-          <h3>{item.level}</h3>
-          <p>{item.text}</p>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
-<div class="container">
-  <section class="cta-section">
-    <h2>Ready to Apply?</h2>
-    <p>Start your application today — it only takes a few minutes to begin.</p>
-    <button type="button" class="btn btn-lg" on:click={() => openLoginModal('/app/dashboard')}>
-      <span>Begin Application</span>
-      <Icon name="arrow-right" size={18} />
-    </button>
-  </section>
-</div>
+<svelte:head><title>Your guide to applying — HBIU Admissions</title></svelte:head>
+<main class="editorial-page guide-page">
+ <header class="editorial-header guide-header"><div><span class="page-kicker">A LITTLE PREPARATION. A CONFIDENT FIRST STEP.</span><h1>Let’s make<br/><em>this simple.</em></h1><p>From your first hello to your entrance examination.<br/>Here’s everything you need to get started.</p></div><button class="btn btn-primary" on:click={apply}>Start your application <Icon name="arrow-right" size={15}/></button></header>
+ <div class="guide-layout"><aside class="guide-preparation"><span class="page-kicker">BEFORE YOU BEGIN</span><h2>A few things to have handy.</h2><ul><li><Icon name="check" size={13}/> Your email and contact details</li><li><Icon name="check" size={13}/> Academic history and qualifications</li><li><Icon name="check" size={13}/> A recent photograph</li><li><Icon name="check" size={13}/> Marksheets and identification</li><li><Icon name="check" size={13}/> Parent or guardian details</li></ul><p>No need to finish everything in one sitting. Use <b>Save &amp; exit</b> to return later.</p><a href="/contact">Need a hand? Talk to us ↗</a></aside>
+ <section class="guide-stages"><div class="guide-stage"><span class="guide-stage-number">01</span><div><span class="page-kicker">TELL US YOUR STORY</span><h2>Create your account &amp; apply.</h2><p>Register with your name and email, verify your account, then work through your application checklist.</p><div class="guide-checklist">{#each content.apply_steps.slice(0,5) as step,i}<div><span>0{i+1}</span><strong>{step.title}</strong></div>{/each}</div></div></div><div class="guide-stage"><span class="guide-stage-number">02</span><div><span class="page-kicker">MAKE IT OFFICIAL</span><h2>Complete your application fee.</h2><p>Submit your completed application and review the fee summary on your dashboard. For this demonstration, payment is simulated.</p><span class="guide-detail">Application fee total <strong>₹1,239</strong></span></div></div><div class="guide-stage"><span class="guide-stage-number">03</span><div><span class="page-kicker">SHOW YOUR POTENTIAL</span><h2>Take your entrance examination.</h2><p>Read the instructions, start when you’re ready, and navigate freely between subjects. Your answers save as you go.</p><div class="exam-guide-stats"><span>30 questions</span><span>45 minutes</span><span>3 subjects</span></div><p class="guide-small">After submission, view your score and review your responses.</p></div></div></section></div>
+</main>

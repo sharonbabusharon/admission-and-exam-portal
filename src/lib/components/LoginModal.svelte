@@ -15,6 +15,7 @@
     resendOtp
   } from '$lib/stores/auth.js';
   import Icon from './Icon.svelte';
+  import { dialog } from '$lib/actions/dialog.js';
 
   let loginEmail = '';
   let signupName = '';
@@ -79,14 +80,16 @@
     aria-labelledby="auth-title"
     on:click={handleOverlayClick}
   >
-    <div class="modal">
+    <div class="modal auth-modal" use:dialog={closeLoginModal}>
+      <div class="auth-story"><img src="/assets/hiu-campus.jpg" alt="Your future campus at Hong Bang International University"/><div class="auth-story-shade"></div><span class="auth-story-top">HONG BANG<br/>INTERNATIONAL UNIVERSITY</span><div class="auth-story-caption"><span>YOUR NEXT CHAPTER</span><h2>A small step.<br/>A world of<br/><em>possibility.</em></h2><p>One place for your application,<br/>your exam, and what comes next.</p></div></div>
+      <div class="auth-content">
       <button type="button" class="modal-close" aria-label="Close" on:click={closeLoginModal}>
         <Icon name="x-mark" size={18} />
       </button>
 
       {#if $authMode === 'login'}
         <div class="modal-icon"><Icon name="lock-closed" size={28} /></div>
-        <h2 class="modal-title" id="auth-title">Welcome to HBIU</h2>
+        <h2 class="modal-title" id="auth-title">Welcome back.</h2>
         <p class="modal-subtitle">Enter your registered email to continue your application to Hong Bang International University</p>
 
         <div class="auth-tabs">
@@ -123,8 +126,8 @@
 
       {:else if $authMode === 'signup'}
         <div class="modal-icon"><Icon name="user-plus" size={28} /></div>
-        <h2 class="modal-title" id="auth-title">Apply to HBIU</h2>
-        <p class="modal-subtitle">Sign up with your email — we'll send a one-time code to verify before creating your account</p>
+        <h2 class="modal-title" id="auth-title">Your journey starts here.</h2>
+        <p class="modal-subtitle">Create your applicant account. A few details today, a world of possibility tomorrow.</p>
 
         <div class="auth-tabs">
           <button type="button" class="auth-tab" on:click={() => switchAuthMode('login')}>Login</button>
@@ -221,6 +224,7 @@
           <button type="button" class="link-btn" on:click={backToSignup}>Change email</button>
         </div>
       {/if}
+      </div>
     </div>
   </div>
 {/if}
