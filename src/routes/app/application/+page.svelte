@@ -586,7 +586,7 @@
 
 <style>
   .application-fields { grid-column: 2; border: 0; padding: 0; margin: 0; min-width: 0; }
-  .read-only-notice { display: flex; align-items: center; gap: 9px; padding: 11px 14px; margin-bottom: 14px; background: #f0f2e8; border: 1px solid #e0e5d5; border-radius: 6px; color: #68745d; font-size: 10px; }
+  .read-only-notice { display: flex; align-items: center; gap: 9px; padding: 11px 14px; margin-bottom: 14px; background: #f0f2e8; border: 1px solid #e0e5d5; border-radius: 6px; color: #68745d; font-size: 13px; }
   .application-fields:disabled :global(input), .application-fields:disabled :global(select) { opacity: 1; color: #566448; background: #f8f9f4; cursor: default; -webkit-text-fill-color: #566448; }
   .application-fields:disabled :global(.btn-add), .application-fields:disabled :global(.btn-icon), .application-fields:disabled :global(.upload-input) { display: none; }
   .upload-box-label {

@@ -28,6 +28,6 @@
     .user-name { max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-email { display: none; }
     .user-avatar { display: none; }
-    .btn-logout { padding: 7px 10px; font-size: 11px; }
+    .btn-logout { padding: 7px 10px; font-size: 13px; }
   }
 </style>
